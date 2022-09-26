@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer, Text, DateTime, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from core.db import Base
 
 
@@ -6,6 +7,7 @@ class Recipe(Base):
     __tablename__ = 'recipes'
     id = Column(Integer, primary_key=True, index=True, unique=True)
     user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User", backref="recipes")
     create_date = Column(DateTime)
     update_date = Column(DateTime)
     title = Column(String)
@@ -42,6 +44,7 @@ class Step(Base):
     __tablename__ = 'steps'
     id = Column(Integer, primary_key=True, index=True, unique=True)
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
+    recipe = relationship("Recipe", backref="steps")
     step = Column(Text)
 
 
@@ -57,6 +60,7 @@ class Hashtag(Base):
     __tablename__ = 'hashtags'
     id = Column(Integer, primary_key=True, index=True, unique=True)
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
+    recipe = relationship("Recipe", backref="hashtags")
 
 
 
