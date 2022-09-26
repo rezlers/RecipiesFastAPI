@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer, Text, DateTime, Boolean, ForeignKey
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from core.db import Base
 
@@ -8,21 +9,22 @@ class Recipe(Base):
     id = Column(Integer, primary_key=True, index=True, unique=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User", backref="recipes")
-    create_date = Column(DateTime)
-    update_date = Column(DateTime)
+    create_date = Column(DateTime, server_default=func.now())
+    update_date = Column(DateTime, server_default=func.now(), onupdate=func.now())
     title = Column(String)
     dish_type = Column(Integer, ForeignKey("dishtypes.id"))
     description = Column(Text)
     photo_link = Column(String)
     is_active = Column(Boolean)
+    is_superuser = Column(Boolean)
 
 
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True, unique=True)
     nickname = Column(String)
-    create_date = Column(DateTime)
-    update_date = Column(DateTime)
+    create_date = Column(DateTime, server_default=func.now())
+    update_date = Column(DateTime, server_default=func.now(), onupdate=func.now())
     is_active = Column(Boolean)
 
 
@@ -31,7 +33,7 @@ class Favourite(Base):
     id = Column(Integer, primary_key=True, index=True, unique=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
-    date = Column(DateTime)
+    date = Column(DateTime, server_default=func.now())
 
 
 class DishType(Base):
@@ -53,7 +55,7 @@ class Like(Base):
     id = Column(Integer, primary_key=True, index=True, unique=True)
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
-    date = Column(DateTime)
+    date = Column(DateTime, server_default=func.now())
 
 
 class Hashtag(Base):
